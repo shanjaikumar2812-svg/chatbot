@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+     <head>
+
+    <title> DS AI Chatbot</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            background:#8db8e3;
+            font-family:Arial;
+        }
+
+        .chat-container{
+
+            width:500px;
+
+            margin:50px auto;
+
+            background:rgb(169, 210, 223);
+
+            padding:20px;
+
+            border-radius:10px;
+
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+            color:#333;
+        }
+
+        #chat-box{
+
+            height:350px;
+
+            border:1px solid #246a8d;
+            border-radius:30px;
+            overflow-y: auto;
+            padding:10px;
+
+            background:#adbec5;
+
+            margin-bottom:15px;
+        }
+
+        .user-msg{
+
+            background:#d1e7ff;
+
+            padding:10px;
+
+            margin:10px;
+
+            border-radius:10px;
+
+            text-align:right;
+        }
+
+        .bot-msg{
+
+            background:#589daf;
+
+            padding:10px;
+
+            margin:10px;
+
+            border-radius:10px;
+        }
+
+        .input-area{
+            display:flex;
+        }
+
+        input{
+
+            width:80%;
+
+            padding:10px;
+
+            border:1px solid #ccc;
+
+            border-radius:30px;
+        }
+
+        button{
+
+            width:20%;
+
+            background:blue;
+
+            color:white;
+
+            border:none;
+
+            border-radius:30px;
+
+            margin-left:5px;
+
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:darkblue;
+        }
+
+    </style>
+
+ </head>
+
+ <body>
+
+  <div class="chat-container">
+
+    <h1><u>CHATBOT</u></h1>
+
+    <div id="chat-box"></div>
+
+    <div class="input-area">
+
+        <input type="text"
+               id="message"
+               placeholder="Type your message">
+
+        <button onclick="sendMessage()">
+            Send
+        </button>
+
+    </div>
+
+ </div>
+
+ <script>
+
+ async function sendMessage(){
+
+    let message = document.getElementById("message").value;
+
+    // Send data to backend
+
+    let response = await fetch("/chat", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            message:message
+        })
+    });
+
+    // Receive backend response
+
+    let data = await response.json();
+
+    let chatBox = document.getElementById("chat-box");
+
+    // Display user message
+
+    chatBox.innerHTML += `
+        <div class="user-msg">
+            <b>You:</b> ${message}
+        </div>
+    `;
+
+    // Display bot reply
+
+    chatBox.innerHTML += `
+        <div class="bot-msg">
+            <b>🤖 :</b> ${data.reply}
+        </div>
+    `;
+
+    // Clear input field
+
+    document.getElementById("message").value = "";
+
+    // Auto scroll
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+ } 
+
+ </script>
+
+ </body>
+ </html>
